@@ -1,0 +1,17 @@
+CREATE STREAM hsLogs (
+`time` VARCHAR,
+`remoteIP` VARCHAR,
+`host` VARCHAR,
+`requestPath` VARCHAR,
+`query` VARCHAR,
+`method` VARCHAR,
+`status` INTEGER,
+`userAgent` VARCHAR,
+`referer` VARCHAR,
+`application` VARCHAR,
+`logtype` VARCHAR ) WITH (kafka_topic='logs', key='time', value_format='json', partitions=1);
+
+CREATE STREAM http404 AS
+SELECT `requestPath`
+FROM hsLogs where `status` = 404
+         EMIT CHANGES;
